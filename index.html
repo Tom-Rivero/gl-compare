@@ -122,10 +122,10 @@
       <option value="classic">Classique (raw), hommes</option>
       <option value="equipped">Équipé, hommes</option>
     </select>
-    <p class="hint">Paliers de 2,5 kg. Un profil incomplet n'est pas affiché.
-      Sous chaque indice : <span class="dot" style="background:var(--muted)"></span> ≥ X = deadlift minimum dont cet adversaire a besoin pour passer devant.
-      Fond à la couleur de l'athlète = l'adversaire ne peut pas le battre dans sa plage ;
-      à la couleur de l'adversaire = il est devant même avec son minimum.</p>
+    <p class="hint">Paliers de 2,5 kg. Un profil incomplet n'est pas affiché. Les comparaisons se font par rapport au premier profil (le tien).
+      Dans ta colonne : <span class="dot" style="background:var(--muted)"></span> ≥ X = deadlift dont ce concurrent a besoin pour passer devant toi.
+      Dans la colonne d'un concurrent : <span class="dot" style="background:var(--A)"></span> ≥ X = deadlift dont tu as besoin pour passer devant lui.
+      Fond bleu = tu es devant quoi qu'il arrive dans les plages ; fond à la couleur du concurrent = il est devant quoi qu'il arrive.</p>
   </section>
 
   <section class="card summary" id="summary" hidden></section>
@@ -147,13 +147,14 @@
   const STEP = 2.5;
   const MAX_ROWS = 200;
   const IDS = ["A", "B", "C"];
+  const DEFAULT_NAMES = { A: "Moi", B: "Concurrent 1", C: "Concurrent 2" };
   const STORE_KEY = "gl-compare-v2";
   const $ = id => document.getElementById(id);
 
   // Formulaire d'un profil
   $("profiles").innerHTML = IDS.map(s => `
     <div class="profile">
-      <h2><span class="dot" style="background:var(--${s})"></span><input id="name${s}" value="Athlète ${s}" aria-label="Nom profil ${s}"></h2>
+      <h2><span class="dot" style="background:var(--${s})"></span><input id="name${s}" value="${DEFAULT_NAMES[s]}" aria-label="Nom profil ${s}"></h2>
       <label for="bw${s}">Poids (kg)</label>
       <input id="bw${s}" type="number" inputmode="decimal" step="0.01" min="30">
       <label for="st${s}">SQ+BP (kg)</label>
@@ -245,7 +246,12 @@
     const rows = Math.max(...ps.map(p => p.dls.length));
     let html = "";
     for (let i = 0; i < rows; i++) {
-      html += "<tr>" + ps.map(p => cell(p, ps.filter(o => o !== p), p.dls[i], cat)).join("") + "</tr>";
+      // Comparaison uniquement avec le premier profil (soi-même)
+      const me = ps[0].id === "A" ? ps[0] : null;
+      html += "<tr>" + ps.map(p => {
+        const opps = !me ? [] : p === me ? ps.slice(1) : [me];
+        return cell(p, opps, p.dls[i], cat);
+      }).join("") + "</tr>";
     }
     tbody.innerHTML = html;
 
