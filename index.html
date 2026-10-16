@@ -12,10 +12,12 @@
     --text: #15181d;
     --muted: #6b7280;
     --border: #dfe2e7;
-    --a: #2563eb;
-    --a-soft: #dbe7ff;
-    --b: #dc2626;
-    --b-soft: #fde0e0;
+    --A: #2563eb;
+    --A-soft: #dbe7ff;
+    --B: #dc2626;
+    --B-soft: #fde0e0;
+    --C: #15803d;
+    --C-soft: #d6f5df;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -24,10 +26,12 @@
       --text: #eef0f3;
       --muted: #9aa3ae;
       --border: #2d333b;
-      --a: #6ea2ff;
-      --a-soft: #1d3157;
-      --b: #ff7b7b;
-      --b-soft: #4a2020;
+      --A: #6ea2ff;
+      --A-soft: #1d3157;
+      --B: #ff7b7b;
+      --B-soft: #4a2020;
+      --C: #4ade80;
+      --C-soft: #173a25;
     }
   }
   * { box-sizing: border-box; }
@@ -37,75 +41,72 @@
     background: var(--bg);
     color: var(--text);
     font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    padding: 12px max(12px, env(safe-area-inset-left)) 32px max(12px, env(safe-area-inset-right));
+    padding: 12px max(10px, env(safe-area-inset-left)) 32px max(10px, env(safe-area-inset-right));
   }
-  main { max-width: 560px; margin: 0 auto; }
-  h1 { font-size: 1.25rem; margin: 4px 0 12px; }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.2rem; margin: 4px 0 12px; }
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 12px;
   }
-  .profiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .profile h2 { font-size: .95rem; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
-  .profile h2 input { padding: 4px 6px; font-weight: 600; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
-  .profile.a .dot { background: var(--a); }
-  .profile.b .dot { background: var(--b); }
-  label { display: block; font-size: .78rem; color: var(--muted); margin: 8px 0 3px; }
+  .profiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .profile h2 { font-size: .9rem; margin: 0 0 6px; display: flex; align-items: center; gap: 5px; }
+  .profile h2 input { padding: 4px 5px; font-weight: 600; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; }
+  label { display: block; font-size: .74rem; color: var(--muted); margin: 7px 0 3px; }
   input, select {
     width: 100%;
+    min-width: 0;
     font: inherit;
     font-size: 16px; /* évite le zoom auto sur iPhone */
-    padding: 9px 10px;
+    padding: 8px 7px;
     border: 1px solid var(--border);
     border-radius: 8px;
     background: var(--bg);
     color: var(--text);
   }
-  input:focus, select:focus { outline: 2px solid var(--a); outline-offset: -1px; }
-  .range { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .hint { font-size: .78rem; color: var(--muted); margin: 8px 0 0; }
-  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: .82rem; text-align: center; }
-  .summary strong { display: block; font-size: 1.1rem; }
-  .summary .sa strong { color: var(--a); }
-  .summary .sb strong { color: var(--b); }
+  input:focus, select:focus { outline: 2px solid var(--A); outline-offset: -1px; }
+  .range { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .range input { padding: 8px 4px; text-align: center; }
+  .hint { font-size: .76rem; color: var(--muted); margin: 8px 0 0; }
+  .summary { display: grid; gap: 8px; font-size: .78rem; text-align: center; }
+  .summary strong { display: block; font-size: .95rem; }
   table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; table-layout: fixed; }
   thead th {
     position: sticky; top: 0;
     background: var(--card);
-    font-size: .85rem;
+    font-size: .82rem;
     font-weight: 700;
-    padding: 9px 4px;
+    padding: 9px 2px;
     border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     z-index: 1;
   }
-  thead th:first-child { border-top-left-radius: 12px; color: var(--a); }
-  thead th:last-child { border-top-right-radius: 12px; color: var(--b); }
-  td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th:first-child { border-top-left-radius: 12px; }
+  thead th:last-child { border-top-right-radius: 12px; }
+  td { padding: 8px 3px; text-align: center; border-bottom: 1px solid var(--border); vertical-align: top; }
   td + td { border-left: 1px solid var(--border); }
-  .dl { font-weight: 700; }
-  .gl { font-size: 1.15rem; font-weight: 700; }
-  td.ca .gl { color: var(--a); }
-  td.cb .gl { color: var(--b); }
-  .tot { color: var(--muted); font-size: .75rem; }
+  .dl { font-weight: 700; font-size: .9rem; }
+  .gl { font-size: 1.1rem; font-weight: 700; }
+  .tot { color: var(--muted); font-size: .72rem; }
+  .needs { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
   .need {
-    display: inline-block;
-    margin-top: 4px;
-    font-size: .72rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .74rem;
     padding: 2px 6px;
     border-radius: 6px;
     background: var(--bg);
     color: var(--muted);
+    white-space: nowrap;
   }
-  /* L'adversaire ne peut pas passer devant dans sa plage */
-  td.ca .need.safe { background: var(--a-soft); color: var(--a); font-weight: 600; }
-  td.cb .need.safe { background: var(--b-soft); color: var(--b); font-weight: 600; }
-  /* L'adversaire est devant même avec son minimum */
-  td.ca .need.lost { background: var(--b-soft); color: var(--b); }
-  td.cb .need.lost { background: var(--a-soft); color: var(--a); }
+  .need.safe, .need.lost { font-weight: 600; }
   .table-card { padding: 0; }
   .empty { padding: 16px; text-align: center; color: var(--muted); }
 </style>
@@ -115,39 +116,15 @@
   <h1>Comparateur d'indice GL (IPF)</h1>
 
   <section class="card">
-    <div class="profiles">
-      <div class="profile a">
-        <h2><span class="dot"></span><input id="nameA" value="Athlète A" aria-label="Nom profil A"></h2>
-        <label for="bwA">Poids de corps (kg)</label>
-        <input id="bwA" type="number" inputmode="decimal" step="0.01" min="30" placeholder="ex. 82.4">
-        <label for="stA">Sous-total SQ+BP (kg)</label>
-        <input id="stA" type="number" inputmode="decimal" step="0.5" min="0" placeholder="ex. 420">
-        <label>Deadlift min / max (kg)</label>
-        <div class="range">
-          <input id="dlMinA" type="number" inputmode="decimal" step="2.5" min="0" value="240" aria-label="Deadlift min A">
-          <input id="dlMaxA" type="number" inputmode="decimal" step="2.5" min="0" value="270" aria-label="Deadlift max A">
-        </div>
-      </div>
-      <div class="profile b">
-        <h2><span class="dot"></span><input id="nameB" value="Athlète B" aria-label="Nom profil B"></h2>
-        <label for="bwB">Poids de corps (kg)</label>
-        <input id="bwB" type="number" inputmode="decimal" step="0.01" min="30" placeholder="ex. 89.7">
-        <label for="stB">Sous-total SQ+BP (kg)</label>
-        <input id="stB" type="number" inputmode="decimal" step="0.5" min="0" placeholder="ex. 435">
-        <label>Deadlift min / max (kg)</label>
-        <div class="range">
-          <input id="dlMinB" type="number" inputmode="decimal" step="2.5" min="0" value="240" aria-label="Deadlift min B">
-          <input id="dlMaxB" type="number" inputmode="decimal" step="2.5" min="0" value="270" aria-label="Deadlift max B">
-        </div>
-      </div>
-    </div>
+    <div class="profiles" id="profiles"></div>
     <label for="cat">Catégorie</label>
     <select id="cat">
       <option value="classic">Classique (raw), hommes</option>
       <option value="equipped">Équipé, hommes</option>
     </select>
-    <p class="hint">Paliers de 2,5 kg. Sous chaque indice : le deadlift minimum dont l'adversaire a besoin pour passer devant.
-      Coloré à la couleur de l'athlète = l'adversaire ne peut pas le battre dans sa plage ;
+    <p class="hint">Paliers de 2,5 kg. Un profil incomplet n'est pas affiché.
+      Sous chaque indice : <span class="dot" style="background:var(--muted)"></span> ≥ X = deadlift minimum dont cet adversaire a besoin pour passer devant.
+      Fond à la couleur de l'athlète = l'adversaire ne peut pas le battre dans sa plage ;
       à la couleur de l'adversaire = il est devant même avec son minimum.</p>
   </section>
 
@@ -155,9 +132,7 @@
 
   <section class="card table-card">
     <table>
-      <thead>
-        <tr><th id="thA">A</th><th id="thB">B</th></tr>
-      </thead>
+      <thead><tr id="head"></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </section>
@@ -171,9 +146,26 @@
   };
   const STEP = 2.5;
   const MAX_ROWS = 200;
-  const FIELDS = ["nameA", "bwA", "stA", "dlMinA", "dlMaxA", "nameB", "bwB", "stB", "dlMinB", "dlMaxB", "cat"];
+  const IDS = ["A", "B", "C"];
   const STORE_KEY = "gl-compare-v2";
   const $ = id => document.getElementById(id);
+
+  // Formulaire d'un profil
+  $("profiles").innerHTML = IDS.map(s => `
+    <div class="profile">
+      <h2><span class="dot" style="background:var(--${s})"></span><input id="name${s}" value="Athlète ${s}" aria-label="Nom profil ${s}"></h2>
+      <label for="bw${s}">Poids (kg)</label>
+      <input id="bw${s}" type="number" inputmode="decimal" step="0.01" min="30">
+      <label for="st${s}">SQ+BP (kg)</label>
+      <input id="st${s}" type="number" inputmode="decimal" step="0.5" min="0">
+      <label>DL min / max</label>
+      <div class="range">
+        <input id="dlMin${s}" type="number" inputmode="decimal" step="2.5" min="0" value="240" aria-label="Deadlift min ${s}">
+        <input id="dlMax${s}" type="number" inputmode="decimal" step="2.5" min="0" value="270" aria-label="Deadlift max ${s}">
+      </div>
+    </div>`).join("");
+
+  const FIELDS = ["cat"].concat(...IDS.map(s => ["name", "bw", "st", "dlMin", "dlMax"].map(f => f + s)));
 
   function denom(bw, cat) {
     const k = COEFS[cat];
@@ -195,6 +187,7 @@
   // Lit un profil ; renvoie null s'il est incomplet
   function profile(s) {
     const p = {
+      id: s,
       name: $("name" + s).value.trim() || s,
       bw: num("bw" + s),
       st: num("st" + s),
@@ -218,54 +211,53 @@
     return dl;
   }
 
-  function cell(p, opp, dl, cls, cat) {
-    if (!p || dl == null) return `<td class="${cls}"></td>`;
+  function cell(p, opps, dl, cat) {
+    if (dl == null) return `<td></td>`;
     const g = gl(p.st + dl, p.bw, cat);
-    let need = "";
-    if (opp && Number.isFinite(g)) {
-      const n = deadliftToBeat(g, opp, cat);
-      const state = n > opp.hi ? "safe" : n <= opp.lo ? "lost" : "";
-      need = `<div><span class="need ${state}">${esc(opp.name)} ≥ ${fmtKg(n)}</span></div>`;
-    }
-    return `<td class="${cls}">
+    const needs = Number.isFinite(g) ? opps.map(o => {
+      const n = deadliftToBeat(g, o, cat);
+      let style = "";
+      if (n > o.hi) style = `background:var(--${p.id}-soft);color:var(--${p.id})`;
+      else if (n <= o.lo) style = `background:var(--${o.id}-soft);color:var(--${o.id})`;
+      return `<span class="need" style="${style}" title="${esc(o.name)} doit tirer au moins ${fmtKg(n)} kg pour passer devant"><span class="dot" style="background:var(--${o.id})"></span>≥ ${fmtKg(n)}</span>`;
+    }).join("") : "";
+    return `<td>
       <div class="dl">DL ${fmtKg(dl)}</div>
-      <div class="gl">${fmt(g)}</div>
-      <div class="tot">Total ${fmtKg(p.st + dl)} kg</div>
-      ${need}
+      <div class="gl" style="color:var(--${p.id})">${fmt(g)}</div>
+      <div class="tot">Total ${fmtKg(p.st + dl)}</div>
+      <div class="needs">${needs}</div>
     </td>`;
   }
 
   function render() {
     const cat = $("cat").value;
-    const A = profile("A"), B = profile("B");
-    $("thA").textContent = $("nameA").value.trim() || "A";
-    $("thB").textContent = $("nameB").value.trim() || "B";
-
+    const ps = IDS.map(profile).filter(Boolean);
     const tbody = $("rows");
     const summary = $("summary");
-    if (!A && !B) {
-      tbody.innerHTML = `<tr><td colspan="2" class="empty">Renseigne le poids de corps, le sous-total et la plage de deadlift d'au moins un profil.</td></tr>`;
+
+    $("head").innerHTML = ps.map(p => `<th style="color:var(--${p.id})">${esc(p.name)}</th>`).join("");
+    if (!ps.length) {
+      tbody.innerHTML = `<tr><td class="empty">Renseigne le poids, le sous-total et la plage de deadlift d'au moins un profil.</td></tr>`;
       summary.hidden = true;
       return;
     }
 
-    const rows = Math.max(A ? A.dls.length : 0, B ? B.dls.length : 0);
+    const rows = Math.max(...ps.map(p => p.dls.length));
     let html = "";
     for (let i = 0; i < rows; i++) {
-      html += `<tr>${cell(A, B, A ? A.dls[i] : null, "ca", cat)}${cell(B, A, B ? B.dls[i] : null, "cb", cat)}</tr>`;
+      html += "<tr>" + ps.map(p => cell(p, ps.filter(o => o !== p), p.dls[i], cat)).join("") + "</tr>";
     }
     tbody.innerHTML = html;
 
-    if (A && B && A.dls.length && B.dls.length) {
-      const range = p => {
+    const withRange = ps.filter(p => p.dls.length);
+    if (withRange.length > 1) {
+      summary.hidden = false;
+      summary.style.gridTemplateColumns = `repeat(${withRange.length}, minmax(0, 1fr))`;
+      summary.innerHTML = withRange.map(p => {
         const g1 = gl(p.st + p.dls[0], p.bw, cat);
         const g2 = gl(p.st + p.dls[p.dls.length - 1], p.bw, cat);
-        return `${fmt(g1)} → ${fmt(g2)}`;
-      };
-      summary.hidden = false;
-      summary.innerHTML = `
-        <div class="sa"><strong>${range(A)}</strong>GL de ${esc(A.name)}</div>
-        <div class="sb"><strong>${range(B)}</strong>GL de ${esc(B.name)}</div>`;
+        return `<div><strong style="color:var(--${p.id})">${fmt(g1)} → ${fmt(g2)}</strong>GL de ${esc(p.name)}</div>`;
+      }).join("");
     } else {
       summary.hidden = true;
     }
