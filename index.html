@@ -117,12 +117,7 @@
 
   <section class="card">
     <div class="profiles" id="profiles"></div>
-    <label for="cat">Catégorie</label>
-    <select id="cat">
-      <option value="classic">Classique (raw), hommes</option>
-      <option value="equipped">Équipé, hommes</option>
-    </select>
-    <p class="hint">Paliers de 2,5 kg. Un profil incomplet n'est pas affiché. Les comparaisons se font par rapport au premier profil (le tien).
+    <p class="hint">Formule IPF GL classique (raw), hommes. Paliers de 2,5 kg. Un profil incomplet n'est pas affiché. Les comparaisons se font par rapport au premier profil (le tien).
       Dans ta colonne : <span class="dot" style="background:var(--muted)"></span> ≥ X = deadlift dont ce concurrent a besoin pour passer devant toi.
       Dans la colonne d'un concurrent : <span class="dot" style="background:var(--A)"></span> ≥ X = deadlift dont tu as besoin pour passer devant lui.
       Fond bleu = tu es devant quoi qu'il arrive dans les plages ; fond à la couleur du concurrent = il est devant quoi qu'il arrive.</p>
@@ -142,7 +137,6 @@
   // IPF GL points (2020) : GL = Total × 100 / (A − B·e^(−C·PdC))
   const COEFS = {
     classic:  { A: 1199.72839, B: 1025.18162, C: 0.00921 },
-    equipped: { A: 1236.25115, B: 1449.21864, C: 0.01644 },
   };
   const STEP = 2.5;
   const MAX_ROWS = 200;
@@ -166,7 +160,7 @@
       </div>
     </div>`).join("");
 
-  const FIELDS = ["cat"].concat(...IDS.map(s => ["name", "bw", "st", "dlMin", "dlMax"].map(f => f + s)));
+  const FIELDS = [].concat(...IDS.map(s => ["name", "bw", "st", "dlMin", "dlMax"].map(f => f + s)));
 
   function denom(bw, cat) {
     const k = COEFS[cat];
@@ -231,7 +225,7 @@
   }
 
   function render() {
-    const cat = $("cat").value;
+    const cat = "classic";
     const ps = IDS.map(profile).filter(Boolean);
     const tbody = $("rows");
     const summary = $("summary");
