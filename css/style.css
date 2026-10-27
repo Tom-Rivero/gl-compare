@@ -122,6 +122,31 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .hint { font-size: .76rem; color: var(--muted); }
 
+/* Échauffement */
+.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; margin-bottom: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+.tabs button { padding: 8px; border: 0; border-radius: 9px; background: none; color: var(--muted); font-weight: 600; }
+.tabs button[aria-selected="true"] { background: var(--accent); color: #fff; }
+.wu-top { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wu-begin { margin: 10px 0 4px; font-size: .9rem; }
+.wu-row {
+  display: grid;
+  grid-template-columns: 1.2em minmax(0, 1.2fr) minmax(0, .8fr) minmax(0, 1fr) 4.6em 32px;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 3px;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.wu-row input { margin: 0; text-align: center; padding: 7px 3px; }
+.wu-labels { font-size: .7rem; color: var(--muted); line-height: 1.15; padding-top: 8px; }
+.wu-row .n { color: var(--muted); font-size: .8rem; text-align: center; }
+.wu-row .time { font-weight: 700; text-align: center; font-size: .9rem; }
+.wu-row .time small { display: block; font-weight: 400; font-size: .68rem; color: var(--accent); }
+.wu-row.past { opacity: .45; }
+.wu-row.next { background: var(--c0-soft); }
+.wu-opener { border-top: 1px solid var(--border); margin-top: 4px; border-radius: 0 0 8px 8px; padding-top: 8px; }
+.wu-opener .label { grid-column: 2 / 5; font-weight: 600; }
+
 /* Classement */
 .ranking-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .ranking-head select { width: auto; margin: 0; padding: 5px 6px; font-size: .85rem; }
