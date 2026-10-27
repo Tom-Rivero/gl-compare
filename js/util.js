@@ -1,3 +1,5 @@
+import { locale } from "./i18n.js";
+
 export const $ = id => document.getElementById(id);
 
 // Nombre saisi (virgule ou point), NaN si vide ou invalide
@@ -9,5 +11,5 @@ export const num = v => {
 export const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 export const nf = (v, max = 2, min = 0) => Number.isFinite(v)
-  ? v.toLocaleString("fr-FR", { minimumFractionDigits: min, maximumFractionDigits: max })
+  ? v.toLocaleString(locale(), { minimumFractionDigits: min, maximumFractionDigits: max })
   : "–";

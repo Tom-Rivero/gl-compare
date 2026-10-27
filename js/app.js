@@ -1,16 +1,17 @@
 import { INCREMENTS, DEFAULT_INCREMENT, toKg, fromKg, weightClass, result, deadlifts, deadliftToBeat, rank } from "./calc.js";
 import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
 import { $, num, esc, nf } from "./util.js";
+import { t, setLang, translatePage } from "./i18n.js";
 
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
-const FIELDS = [["bw", "Poids"], ["st", "SQ+BP"], ["lo", "DL min"], ["hi", "DL max"]];
+const FIELDS = ["bw", "st", "lo", "hi"];
 const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage" };
 
 const defaultState = () => ({
-  settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min" },
-  profiles: ["Moi", "Concurrent 1", "Concurrent 2"].map((name, color) => ({ name, bw: "", st: "", lo: "240", hi: "270", color })),
+  settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto" },
+  profiles: [0, 1, 2].map(color => ({ name: "", bw: "", st: "", lo: "240", hi: "270", color })),
   warmup: defaultWarmup(),
 });
 
@@ -21,6 +22,8 @@ const warmup = initWarmup(state, save);
 const fmtGl = v => nf(v, 2, 2);
 const fmtW = v => nf(v, 2);
 const clsLabel = cls => `${cls.label.replace("-", "−")} kg`;
+// Nom affiché quand le champ est vide (suit la langue choisie)
+const defaultName = i => i ? t("competitor", { n: i }) : t("me");
 const colorVars = color => `--c:var(--c${color});--c-soft:var(--c${color}-soft)`;
 
 // --- Lecture des profils ---
@@ -31,7 +34,7 @@ function parse(p, i) {
   if (!(bw > 0) || !(st >= 0) || !Number.isFinite(lo) || !Number.isFinite(hi)) return null;
   return {
     i,
-    name: p.name.trim() || `Athlète ${i + 1}`,
+    name: p.name.trim() || defaultName(i),
     color: p.color,
     bw, st,
     lo: Math.min(lo, hi),
@@ -47,7 +50,7 @@ const comparable = (a, b) => state.settings.mode === "gl" || a.cls.label === b.c
 // --- Rendu ---
 function renderSettings() {
   const s = state.settings;
-  ["sex", "equipment", "unit", "mode", "scenario"].forEach(id => $(id).value = s[id]);
+  ["sex", "equipment", "unit", "mode", "scenario", "lang"].forEach(id => $(id).value = s[id]);
   $("step").innerHTML = INCREMENTS[s.unit].map(v => `<option value="${v}">${nf(v)} ${s.unit}</option>`).join("");
   $("step").value = s.step;
 }
@@ -58,12 +61,12 @@ function renderProfiles() {
     <div class="profile" data-i="${i}" style="${colorVars(p.color)}">
       <div class="profile-head">
         <span class="dot"></span>
-        <input class="name" data-f="name" value="${esc(p.name)}" aria-label="Nom de l'athlète ${i + 1}">
+        <input class="name" data-f="name" value="${esc(p.name)}" placeholder="${esc(defaultName(i))}" aria-label="${esc(t("name.aria", { n: i + 1 }))}">
         <span class="badge" id="cls${i}"></span>
-        ${i ? `<button class="remove" type="button" data-remove aria-label="Retirer ${esc(p.name)}">×</button>` : ""}
+        ${i ? `<button class="remove" type="button" data-remove aria-label="${esc(t("remove.aria", { name: p.name.trim() || defaultName(i) }))}">×</button>` : ""}
       </div>
       <div class="fields">
-        ${FIELDS.map(([f, label]) => `<label>${label} (${u})
+        ${FIELDS.map(f => `<label>${t("f." + f)} (${u})
           <input data-f="${f}" type="number" inputmode="decimal" step="any" min="0" value="${esc(p[f])}">
         </label>`).join("")}
       </div>
@@ -72,7 +75,7 @@ function renderProfiles() {
 
 function renderSummary() {
   const text = id => $(id).selectedOptions[0].textContent;
-  $("summaryLine").textContent = [text("sex"), text("equipment"), `incrément ${text("step")}`, text("mode")].join(" · ");
+  $("summaryLine").textContent = [text("sex"), text("equipment"), t("summary.step", { v: text("step") }), text("mode")].join(" · ");
 }
 
 function renderResults() {
@@ -88,13 +91,10 @@ function renderResults() {
 }
 
 function renderHint() {
-  const rule = state.settings.mode === "gl"
-    ? "Comparaison aux points GL IPF (formule 2020)."
-    : "Comparaison au total dans la catégorie de poids IPF ; à total égal, le plus léger passe devant. Seuls les concurrents de ta catégorie sont comparés. Les catégories restent en kg même si tu saisis en lb.";
-  $("hint").innerHTML = `${rule} Un profil incomplet n'est pas affiché. Les comparaisons se font par rapport au premier profil (le tien).
-    Dans ta colonne : <span class="dot" style="--c:var(--muted)"></span> ≥ X = deadlift dont ce concurrent a besoin pour passer devant toi.
-    Dans la colonne d'un concurrent : <span class="dot" style="--c:var(--c${state.profiles[0].color})"></span> ≥ X = deadlift dont tu as besoin pour passer devant lui.
-    Fond à ta couleur = tu es devant quoi qu'il arrive dans les plages ; fond à la couleur du concurrent = il est devant quoi qu'il arrive.`;
+  $("hint").innerHTML = `${t("hint." + state.settings.mode)} ${t("hint.common", {
+    dotOpp: `<span class="dot" style="--c:var(--muted)"></span>`,
+    dotMe: `<span class="dot" style="--c:var(--c${state.profiles[0].color})"></span>`,
+  })}`;
 }
 
 function cell(p, opps, dl) {
@@ -108,10 +108,10 @@ function cell(p, opps, dl) {
     if (n > o.hi) style = `background:var(--c${p.color}-soft);color:var(--c${p.color})`;
     else if (n <= o.lo) style = `background:var(--c${o.color}-soft);color:var(--c${o.color})`;
     if (style) cls += " decided";
-    return `<span class="${cls}" style="${style}" title="${esc(o.name)} doit tirer au moins ${fmtW(n)} ${s.unit} pour passer devant"><span class="dot" style="${colorVars(o.color)}"></span>≥ ${fmtW(n)}</span>`;
+    return `<span class="${cls}" style="${style}" title="${esc(t("need.title", { name: o.name, v: fmtW(n), u: s.unit }))}"><span class="dot" style="${colorVars(o.color)}"></span>≥ ${fmtW(n)}</span>`;
   }).join("");
   const [main, sub] = s.mode === "gl"
-    ? [fmtGl(r.gl), `Total ${fmtW(r.total)}`]
+    ? [fmtGl(r.gl), t("total", { v: fmtW(r.total) })]
     : [fmtW(r.total), `${fmtGl(r.gl)} GL`];
   return `<td style="${colorVars(p.color)}">
     <div class="dl">DL ${fmtW(dl)}</div>
@@ -126,7 +126,7 @@ function renderTable(ps) {
   $("table").style.minWidth = `${Math.max(1, ps.length) * 108}px`;
   $("head").innerHTML = ps.map(p => `<th style="${colorVars(p.color)}">${esc(p.name)}${s.mode === "total" ? `<small>${clsLabel(p.cls)}</small>` : ""}</th>`).join("");
   if (!ps.length) {
-    $("rows").innerHTML = `<tr><td class="empty">Renseigne le poids, le sous-total et la plage de deadlift d'au moins un athlète.</td></tr>`;
+    $("rows").innerHTML = `<tr><td class="empty">${t("empty")}</td></tr>`;
     return;
   }
   const me = ps[0].i === 0 ? ps[0] : null;
@@ -158,7 +158,7 @@ function renderRanking(ps) {
     ${g.cls ? `<h3>${clsLabel(g.cls)}</h3>` : ""}
     <ol>${g.rows.map(r => {
       const [main, sub] = s.mode === "gl"
-        ? [fmtGl(r.gl), `Total ${fmtW(r.total)}`]
+        ? [fmtGl(r.gl), t("total", { v: fmtW(r.total) })]
         : [`${fmtW(r.total)} ${s.unit}`, `${fmtGl(r.gl)} GL`];
       return `<li class="${r.i === 0 ? "me" : ""}" style="${colorVars(r.color)}">
         <span class="place">${r.place}</span><span class="dot"></span>
@@ -197,7 +197,7 @@ function nextColor() {
 
 function addProfile() {
   const first = state.profiles[0];
-  state.profiles.push({ name: `Concurrent ${state.profiles.length}`, bw: "", st: "", lo: first.lo, hi: first.hi, color: nextColor() });
+  state.profiles.push({ name: "", bw: "", st: "", lo: first.lo, hi: first.hi, color: nextColor() });
   renderProfiles();
   renderResults();
   save();
@@ -218,13 +218,15 @@ function load() {
       if (!INCREMENTS[settings.unit]?.includes(settings.step)) Object.assign(settings, base.settings);
       const warmup = { ...base.warmup, ...saved.warmup };
       warmup.lifts = { ...base.warmup.lifts, ...saved.warmup?.lifts };
-      return { settings, profiles: saved.profiles, warmup };
+      // Les anciens noms par défaut (« Moi », « Concurrent n ») laissent place au nom traduit
+      const profiles = saved.profiles.map((p, i) => p.name === (i ? `Concurrent ${i}` : "Moi") ? { ...p, name: "" } : p);
+      return { settings, profiles, warmup };
     }
     // Reprise des données de la version précédente (3 profils A, B, C)
     const old = JSON.parse(localStorage.getItem(OLD_STORE_KEY));
     if (old) {
       base.profiles = ["A", "B", "C"].map((s, color) => ({
-        name: old["name" + s] || base.profiles[color].name,
+        name: old["name" + s] || "",
         bw: old["bw" + s] ?? "",
         st: old["st" + s] ?? "",
         lo: old["dlMin" + s] ?? "",
@@ -245,6 +247,16 @@ function load() {
 $("step").addEventListener("change", e => {
   state.settings.step = parseFloat(e.target.value);
   renderResults();
+  save();
+});
+$("lang").addEventListener("change", e => {
+  state.settings.lang = e.target.value;
+  setLang(state.settings.lang);
+  translatePage();
+  renderSettings();
+  renderProfiles();
+  renderResults();
+  warmup.render();
   save();
 });
 $("unit").addEventListener("change", e => {
@@ -291,6 +303,8 @@ document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e =>
   route();
 }));
 
+setLang(state.settings.lang);
+translatePage();
 route();
 renderSettings();
 renderProfiles();
