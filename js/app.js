@@ -1,29 +1,25 @@
 import { INCREMENTS, DEFAULT_INCREMENT, toKg, fromKg, weightClass, result, deadlifts, deadliftToBeat, rank } from "./calc.js";
+import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
+import { $, num, esc, nf } from "./util.js";
 
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
 const FIELDS = [["bw", "Poids"], ["st", "SQ+BP"], ["lo", "DL min"], ["hi", "DL max"]];
-const $ = id => document.getElementById(id);
+const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage" };
 
 const defaultState = () => ({
   settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min" },
   profiles: ["Moi", "Concurrent 1", "Concurrent 2"].map((name, color) => ({ name, bw: "", st: "", lo: "240", hi: "270", color })),
+  warmup: defaultWarmup(),
 });
 
 let state = load();
+const warmup = initWarmup(state, save);
 
 // --- Formatage ---
-const nf = (v, max = 2, min = 0) => Number.isFinite(v)
-  ? v.toLocaleString("fr-FR", { minimumFractionDigits: min, maximumFractionDigits: max })
-  : "–";
 const fmtGl = v => nf(v, 2, 2);
 const fmtW = v => nf(v, 2);
-const num = v => {
-  const n = parseFloat(String(v).replace(",", "."));
-  return Number.isFinite(n) ? n : NaN;
-};
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const clsLabel = cls => `${cls.label.replace("-", "−")} kg`;
 const colorVars = color => `--c:var(--c${color});--c-soft:var(--c${color}-soft)`;
 
@@ -183,6 +179,11 @@ function changeUnit(unit) {
     p.bw = convert(p.bw, 2);
     ["st", "lo", "hi"].forEach(f => p[f] = convert(p[f], 1));
   });
+  LIFTS.forEach(lift => {
+    const l = state.warmup.lifts[lift];
+    l.opener = convert(l.opener, 1);
+    l.sets.forEach(set => set.load = convert(set.load, 1));
+  });
   state.settings.unit = unit;
   state.settings.step = DEFAULT_INCREMENT[unit];
 }
@@ -215,7 +216,9 @@ function load() {
     if (saved?.profiles?.length) {
       const settings = { ...base.settings, ...saved.settings };
       if (!INCREMENTS[settings.unit]?.includes(settings.step)) Object.assign(settings, base.settings);
-      return { settings, profiles: saved.profiles };
+      const warmup = { ...base.warmup, ...saved.warmup };
+      warmup.lifts = { ...base.warmup.lifts, ...saved.warmup?.lifts };
+      return { settings, profiles: saved.profiles, warmup };
     }
     // Reprise des données de la version précédente (3 profils A, B, C)
     const old = JSON.parse(localStorage.getItem(OLD_STORE_KEY));
@@ -249,6 +252,7 @@ $("unit").addEventListener("change", e => {
   renderSettings();
   renderProfiles();
   renderResults();
+  warmup.render();
   save();
 });
 $("profiles").addEventListener("input", e => {
@@ -267,24 +271,25 @@ $("profiles").addEventListener("click", e => {
 });
 $("add").addEventListener("click", addProfile);
 
-// --- Navigation : l'écran Paramètres est lié à #parametres, le bouton retour du téléphone le referme ---
+// --- Navigation : chaque écran secondaire a son ancre (#parametres, #echauffement),
+// le bouton retour du téléphone le referme ---
 let openedFromHome = false;
 function route() {
-  const settings = location.hash === "#parametres";
-  $("home").hidden = settings;
-  $("settingsPage").hidden = !settings;
+  const page = PAGES[location.hash] || "home";
+  ["home", ...Object.values(PAGES)].forEach(id => $(id).hidden = id !== page);
+  if (page === "warmupPage") warmup.render();
   window.scrollTo(0, 0);
 }
 window.addEventListener("hashchange", () => {
-  openedFromHome = location.hash === "#parametres";
+  openedFromHome = location.hash in PAGES;
   route();
 });
-$("back").addEventListener("click", e => {
+document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e => {
   e.preventDefault();
   if (openedFromHome) return history.back();
   history.replaceState(null, "", location.pathname);
   route();
-});
+}));
 
 route();
 renderSettings();
