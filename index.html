@@ -5,282 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111418">
 <title>Comparateur GL</title>
-<style>
-  :root {
-    --bg: #f4f5f7;
-    --card: #ffffff;
-    --text: #15181d;
-    --muted: #6b7280;
-    --border: #dfe2e7;
-    --A: #2563eb;
-    --A-soft: #dbe7ff;
-    --B: #dc2626;
-    --B-soft: #fde0e0;
-    --C: #15803d;
-    --C-soft: #d6f5df;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #111418;
-      --card: #1b1f25;
-      --text: #eef0f3;
-      --muted: #9aa3ae;
-      --border: #2d333b;
-      --A: #6ea2ff;
-      --A-soft: #1d3157;
-      --B: #ff7b7b;
-      --B-soft: #4a2020;
-      --C: #4ade80;
-      --C-soft: #173a25;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    padding: 12px max(10px, env(safe-area-inset-left)) 32px max(10px, env(safe-area-inset-right));
-  }
-  main { max-width: 640px; margin: 0 auto; }
-  h1 { font-size: 1.2rem; margin: 4px 0 12px; }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px;
-    margin-bottom: 12px;
-  }
-  .profiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .profile h2 { font-size: .9rem; margin: 0 0 6px; display: flex; align-items: center; gap: 5px; }
-  .profile h2 input { padding: 4px 5px; font-weight: 600; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; display: inline-block; }
-  label { display: block; font-size: .74rem; color: var(--muted); margin: 7px 0 3px; }
-  input, select {
-    width: 100%;
-    min-width: 0;
-    font: inherit;
-    font-size: 16px; /* évite le zoom auto sur iPhone */
-    padding: 8px 7px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-  }
-  input:focus, select:focus { outline: 2px solid var(--A); outline-offset: -1px; }
-  .range { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .range input { padding: 8px 4px; text-align: center; }
-  .hint { font-size: .76rem; color: var(--muted); margin: 8px 0 0; }
-  .summary { display: grid; gap: 8px; font-size: .78rem; text-align: center; }
-  .summary strong { display: block; font-size: .95rem; }
-  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; table-layout: fixed; }
-  thead th {
-    position: sticky; top: 0;
-    background: var(--card);
-    font-size: .82rem;
-    font-weight: 700;
-    padding: 9px 2px;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    z-index: 1;
-  }
-  thead th:first-child { border-top-left-radius: 12px; }
-  thead th:last-child { border-top-right-radius: 12px; }
-  td { padding: 8px 3px; text-align: center; border-bottom: 1px solid var(--border); vertical-align: top; }
-  td + td { border-left: 1px solid var(--border); }
-  .dl { font-weight: 700; font-size: .9rem; }
-  .gl { font-size: 1.1rem; font-weight: 700; }
-  .tot { color: var(--muted); font-size: .72rem; }
-  .needs { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 4px; }
-  .need {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: .74rem;
-    padding: 2px 6px;
-    border-radius: 6px;
-    background: var(--bg);
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  .need.safe, .need.lost { font-weight: 600; }
-  .table-card { padding: 0; }
-  .empty { padding: 16px; text-align: center; color: var(--muted); }
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<main>
-  <h1>Comparateur d'indice GL (IPF)</h1>
+<main id="home">
+  <header class="top">
+    <h1>Comparateur d'indice GL (IPF)</h1>
+    <a class="icon-btn" href="#parametres" aria-label="Paramètres">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </a>
+  </header>
+  <a class="summary-line" id="summaryLine" href="#parametres"></a>
 
-  <section class="card">
-    <div class="profiles" id="profiles"></div>
-    <p class="hint">Formule IPF GL classique (raw), hommes. Paliers de 2,5 kg. Un profil incomplet n'est pas affiché. Les comparaisons se font par rapport au premier profil (le tien).
-      Dans ta colonne : <span class="dot" style="background:var(--muted)"></span> ≥ X = deadlift dont ce concurrent a besoin pour passer devant toi.
-      Dans la colonne d'un concurrent : <span class="dot" style="background:var(--A)"></span> ≥ X = deadlift dont tu as besoin pour passer devant lui.
-      Fond bleu = tu es devant quoi qu'il arrive dans les plages ; fond à la couleur du concurrent = il est devant quoi qu'il arrive.</p>
+  <section class="card" aria-label="Athlètes">
+    <div id="profiles"></div>
+    <button id="add" class="add" type="button">+ Ajouter un concurrent</button>
   </section>
 
-  <section class="card summary" id="summary" hidden></section>
+  <section class="card ranking" id="ranking" hidden>
+    <div class="ranking-head">
+      <h2>Classement</h2>
+      <select id="scenario" aria-label="Scénario de deadlift">
+        <option value="min">Tous au DL min</option>
+        <option value="max">Tous au DL max</option>
+        <option value="best">Moi max, eux min</option>
+        <option value="worst">Moi min, eux max</option>
+      </select>
+    </div>
+    <div id="rankingBody"></div>
+  </section>
 
   <section class="card table-card">
-    <table>
-      <thead><tr id="head"></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
+    <div class="scroll">
+      <table id="table">
+        <thead><tr id="head"></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
   </section>
 </main>
 
-<script>
-  // IPF GL points (2020) : GL = Total × 100 / (A − B·e^(−C·PdC))
-  const COEFS = {
-    classic:  { A: 1199.72839, B: 1025.18162, C: 0.00921 },
-  };
-  const STEP = 2.5;
-  const MAX_ROWS = 200;
-  const IDS = ["A", "B", "C"];
-  const DEFAULT_NAMES = { A: "Moi", B: "Concurrent 1", C: "Concurrent 2" };
-  const STORE_KEY = "gl-compare-v2";
-  const $ = id => document.getElementById(id);
+<main id="settingsPage" hidden>
+  <header class="top">
+    <a class="icon-btn" href="#" id="back" aria-label="Retour">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <h1>Paramètres</h1>
+  </header>
 
-  // Formulaire d'un profil
-  $("profiles").innerHTML = IDS.map(s => `
-    <div class="profile">
-      <h2><span class="dot" style="background:var(--${s})"></span><input id="name${s}" value="${DEFAULT_NAMES[s]}" aria-label="Nom profil ${s}"></h2>
-      <label for="bw${s}">Poids (kg)</label>
-      <input id="bw${s}" type="number" inputmode="decimal" step="0.01" min="30">
-      <label for="st${s}">SQ+BP (kg)</label>
-      <input id="st${s}" type="number" inputmode="decimal" step="0.5" min="0">
-      <label>DL min / max</label>
-      <div class="range">
-        <input id="dlMin${s}" type="number" inputmode="decimal" step="2.5" min="0" value="240" aria-label="Deadlift min ${s}">
-        <input id="dlMax${s}" type="number" inputmode="decimal" step="2.5" min="0" value="270" aria-label="Deadlift max ${s}">
-      </div>
-    </div>`).join("");
-
-  const FIELDS = [].concat(...IDS.map(s => ["name", "bw", "st", "dlMin", "dlMax"].map(f => f + s)));
-
-  function denom(bw, cat) {
-    const k = COEFS[cat];
-    return k.A - k.B * Math.exp(-k.C * bw);
-  }
-  function gl(total, bw, cat) {
-    const d = denom(bw, cat);
-    return d > 0 ? total * 100 / d : NaN;
-  }
-
-  const num = id => {
-    const v = parseFloat(String($(id).value).replace(",", "."));
-    return Number.isFinite(v) ? v : NaN;
-  };
-  const fmt = v => Number.isFinite(v) ? v.toFixed(2) : "–";
-  const fmtKg = v => (Math.round(v * 10) / 10).toString().replace(".", ",");
-  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-
-  // Lit un profil ; renvoie null s'il est incomplet
-  function profile(s) {
-    const p = {
-      id: s,
-      name: $("name" + s).value.trim() || s,
-      bw: num("bw" + s),
-      st: num("st" + s),
-      lo: num("dlMin" + s),
-      hi: num("dlMax" + s),
-    };
-    if (!(p.bw > 0) || !(p.st >= 0) || !Number.isFinite(p.lo) || !Number.isFinite(p.hi)) return null;
-    if (p.lo > p.hi) [p.lo, p.hi] = [p.hi, p.lo];
-    p.lo = Math.ceil(p.lo / STEP - 1e-9) * STEP; // aligne sur un multiple de 2,5 kg
-    p.dls = [];
-    for (let dl = p.lo; dl <= p.hi + 1e-9 && p.dls.length < MAX_ROWS; dl += STEP) p.dls.push(dl);
-    return p;
-  }
-
-  // Plus petit deadlift (multiple de 2,5) donnant à l'adversaire un GL strictement supérieur à target
-  function deadliftToBeat(target, opp, cat) {
-    const d = denom(opp.bw, cat);
-    if (!(d > 0)) return NaN;
-    let dl = Math.max(0, Math.ceil(((target * d / 100) - opp.st) / STEP - 1e-9) * STEP);
-    while (gl(opp.st + dl, opp.bw, cat) <= target) dl += STEP;
-    return dl;
-  }
-
-  function cell(p, opps, dl, cat) {
-    if (dl == null) return `<td></td>`;
-    const g = gl(p.st + dl, p.bw, cat);
-    const needs = Number.isFinite(g) ? opps.map(o => {
-      const n = deadliftToBeat(g, o, cat);
-      let style = "";
-      if (n > o.hi) style = `background:var(--${p.id}-soft);color:var(--${p.id})`;
-      else if (n <= o.lo) style = `background:var(--${o.id}-soft);color:var(--${o.id})`;
-      return `<span class="need" style="${style}" title="${esc(o.name)} doit tirer au moins ${fmtKg(n)} kg pour passer devant"><span class="dot" style="background:var(--${o.id})"></span>≥ ${fmtKg(n)}</span>`;
-    }).join("") : "";
-    return `<td>
-      <div class="dl">DL ${fmtKg(dl)}</div>
-      <div class="gl" style="color:var(--${p.id})">${fmt(g)}</div>
-      <div class="tot">Total ${fmtKg(p.st + dl)}</div>
-      <div class="needs">${needs}</div>
-    </td>`;
-  }
-
-  function render() {
-    const cat = "classic";
-    const ps = IDS.map(profile).filter(Boolean);
-    const tbody = $("rows");
-    const summary = $("summary");
-
-    $("head").innerHTML = ps.map(p => `<th style="color:var(--${p.id})">${esc(p.name)}</th>`).join("");
-    if (!ps.length) {
-      tbody.innerHTML = `<tr><td class="empty">Renseigne le poids, le sous-total et la plage de deadlift d'au moins un profil.</td></tr>`;
-      summary.hidden = true;
-      return;
-    }
-
-    const rows = Math.max(...ps.map(p => p.dls.length));
-    let html = "";
-    for (let i = 0; i < rows; i++) {
-      // Comparaison uniquement avec le premier profil (soi-même)
-      const me = ps[0].id === "A" ? ps[0] : null;
-      html += "<tr>" + ps.map(p => {
-        const opps = !me ? [] : p === me ? ps.slice(1) : [me];
-        return cell(p, opps, p.dls[i], cat);
-      }).join("") + "</tr>";
-    }
-    tbody.innerHTML = html;
-
-    const withRange = ps.filter(p => p.dls.length);
-    if (withRange.length > 1) {
-      summary.hidden = false;
-      summary.style.gridTemplateColumns = `repeat(${withRange.length}, minmax(0, 1fr))`;
-      summary.innerHTML = withRange.map(p => {
-        const g1 = gl(p.st + p.dls[0], p.bw, cat);
-        const g2 = gl(p.st + p.dls[p.dls.length - 1], p.bw, cat);
-        return `<div><strong style="color:var(--${p.id})">${fmt(g1)} → ${fmt(g2)}</strong>GL de ${esc(p.name)}</div>`;
-      }).join("");
-    } else {
-      summary.hidden = true;
-    }
-  }
-
-  function save() {
-    try {
-      const data = {};
-      FIELDS.forEach(id => data[id] = $(id).value);
-      localStorage.setItem(STORE_KEY, JSON.stringify(data));
-    } catch (e) {}
-  }
-
-  function load() {
-    try {
-      const data = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
-      FIELDS.forEach(id => { if (data[id] != null) $(id).value = data[id]; });
-    } catch (e) {}
-  }
-
-  load();
-  FIELDS.forEach(id => $(id).addEventListener("input", () => { render(); save(); }));
-  render();
-</script>
+  <section class="card settings" aria-label="Paramètres">
+    <label>Sexe
+      <select id="sex">
+        <option value="M">Homme</option>
+        <option value="F">Femme</option>
+      </select>
+    </label>
+    <label>Équipement
+      <select id="equipment">
+        <option value="classic">Classique (raw)</option>
+        <option value="equipped">Équipé</option>
+      </select>
+    </label>
+    <label>Unité
+      <select id="unit">
+        <option value="kg">kg</option>
+        <option value="lb">lb</option>
+      </select>
+    </label>
+    <label>Incrément
+      <select id="step"></select>
+    </label>
+    <label>Comparer au
+      <select id="mode">
+        <option value="gl">Points GL</option>
+        <option value="total">Total (catégorie)</option>
+      </select>
+    </label>
+  </section>
+  <section class="card">
+    <h2>Lire le tableau</h2>
+    <p class="hint" id="hint"></p>
+  </section>
+</main>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
