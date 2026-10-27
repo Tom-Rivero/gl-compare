@@ -13,8 +13,15 @@ const newSet = () => ({ load: "", reps: "1", rest: "5" });
 
 export const defaultWarmup = () => ({
   lift: "squat",
+  alerts: true,
   lifts: Object.fromEntries(LIFTS.map(l => [l, { start: "", opener: "", sets: [newSet()] }])),
 });
+
+// Heures des séries d'un mouvement puis du 1er essai (secondes depuis minuit, NaN si incomplet)
+export function liftTimes(l) {
+  const start = parseTime(l.start);
+  return [...schedule(start, l.sets.map(s => num(s.rest))), start];
+}
 
 const secondsNow = () => {
   const d = new Date();
@@ -44,8 +51,8 @@ export function initWarmup(state, save) {
 
   function updateTimes() {
     const l = current();
-    const start = parseTime(l.start);
-    const times = [...schedule(start, l.sets.map(s => num(s.rest))), start];
+    const times = liftTimes(l);
+    const start = times[times.length - 1];
     const now = secondsNow();
     const live = times.every(Number.isFinite) && now >= times[0] - LIVE_BEFORE && now <= start + LIVE_AFTER;
     const next = live ? nextIndex(times, now) : -1;

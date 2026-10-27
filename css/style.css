@@ -148,6 +148,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .wu-opener { border-top: 1px solid var(--border); margin-top: 4px; border-radius: 0 0 8px 8px; padding-top: 8px; }
 .wu-opener .label { grid-column: 2 / 5; font-weight: 600; }
 
+.toggle { display: flex; align-items: center; gap: 10px; font-size: .95rem; font-weight: 600; color: var(--text); }
+.toggle input { width: 22px; height: 22px; margin: 0; flex: none; accent-color: var(--accent); }
+#alertsStatus { margin: 8px 0 0; }
+#alertsFix { margin-top: 8px; }
+
 /* Classement */
 .ranking-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .ranking-head select { width: auto; margin: 0; padding: 5px 6px; font-size: .85rem; }
