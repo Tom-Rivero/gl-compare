@@ -1,6 +1,7 @@
 // Écran Échauffement : séries de chauffe par mouvement et heure de passage de chacune
 import { parseTime, formatTime, schedule, nextIndex } from "./warmup.js";
 import { $, num, esc, nf } from "./util.js";
+import { t } from "./i18n.js";
 
 export const LIFTS = ["squat", "bench", "deadlift"];
 const REFRESH_MS = 15000;
@@ -32,11 +33,11 @@ export function initWarmup(state, save) {
     $("wuSets").innerHTML = l.sets.map((set, i) => `
       <div class="wu-row" data-i="${i}">
         <span class="n">${i + 1}</span>
-        <input data-f="load" type="number" inputmode="decimal" step="any" min="0" value="${esc(set.load)}" aria-label="Charge série ${i + 1}">
-        <input data-f="reps" type="number" inputmode="numeric" step="1" min="1" value="${esc(set.reps)}" aria-label="Répétitions série ${i + 1}">
-        <input data-f="rest" type="number" inputmode="numeric" step="1" min="0" value="${esc(set.rest)}" aria-label="Repos après la série ${i + 1}, en minutes">
+        <input data-f="load" type="number" inputmode="decimal" step="any" min="0" value="${esc(set.load)}" aria-label="${esc(t("wu.load.aria", { n: i + 1 }))}">
+        <input data-f="reps" type="number" inputmode="numeric" step="1" min="1" value="${esc(set.reps)}" aria-label="${esc(t("wu.reps.aria", { n: i + 1 }))}">
+        <input data-f="rest" type="number" inputmode="numeric" step="1" min="0" value="${esc(set.rest)}" aria-label="${esc(t("wu.rest.aria", { n: i + 1 }))}">
         <span class="time"></span>
-        <button class="remove" type="button" data-remove aria-label="Retirer la série ${i + 1}">×</button>
+        <button class="remove" type="button" data-remove aria-label="${esc(t("wu.remove.aria", { n: i + 1 }))}">×</button>
       </div>`).join("");
     updateTimes();
   }
@@ -49,7 +50,7 @@ export function initWarmup(state, save) {
     const live = times.every(Number.isFinite) && now >= times[0] - LIVE_BEFORE && now <= start + LIVE_AFTER;
     const next = live ? nextIndex(times, now) : -1;
     const timeHtml = i => formatTime(times[i])
-      + (i === next ? `<small>dans ${Math.ceil((times[i] - now) / 60)} min</small>` : "");
+      + (i === next ? `<small>${t("wu.in", { n: Math.ceil((times[i] - now) / 60) })}</small>` : "");
     const mark = (row, i) => {
       row.classList.toggle("past", live && times[i] < now);
       row.classList.toggle("next", i === next);
@@ -62,15 +63,15 @@ export function initWarmup(state, save) {
     const o = l.sets.length;
     const opener = num(l.opener);
     $("wuOpenerRow").innerHTML = `<span class="n">▸</span>
-      <span class="label">1er essai${Number.isFinite(opener) ? ` · ${nf(opener)} ${state.settings.unit}` : ""}</span>
+      <span class="label">${t("wu.opener")}${Number.isFinite(opener) ? ` · ${nf(opener)} ${state.settings.unit}` : ""}</span>
       <span class="time">${timeHtml(o)}</span><span></span>`;
     mark($("wuOpenerRow"), o);
 
     $("wuBegin").innerHTML = !Number.isFinite(start)
-      ? "Renseigne l'heure de passage du 1er essai."
+      ? t("wu.needStart")
       : Number.isFinite(times[0])
-        ? `Début de l'échauffement : <strong>${formatTime(times[0])}</strong>`
-        : "Renseigne le repos de chaque série.";
+        ? t("wu.begin", { t: `<strong>${formatTime(times[0])}</strong>` })
+        : t("wu.needRest");
   }
 
   $("liftTabs").addEventListener("click", e => {
