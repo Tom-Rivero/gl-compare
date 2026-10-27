@@ -3,6 +3,7 @@ import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
 import { $, num, esc, nf } from "./util.js";
 import { t, setLang, translatePage } from "./i18n.js";
 import { setTheme } from "./theme.js";
+import { initAlerts } from "./alerts-native.js";
 
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
@@ -17,7 +18,11 @@ const defaultState = () => ({
 });
 
 let state = load();
-const warmup = initWarmup(state, save);
+const alerts = initAlerts(state, save);
+const warmup = initWarmup(state, () => {
+  save();
+  alerts.schedule();
+});
 
 // --- Formatage ---
 const fmtGl = v => nf(v, 2, 2);
@@ -264,6 +269,7 @@ $("lang").addEventListener("change", e => {
   renderResults();
   warmup.render();
   save();
+  alerts.schedule();
 });
 $("unit").addEventListener("change", e => {
   changeUnit(e.target.value);
@@ -272,6 +278,7 @@ $("unit").addEventListener("change", e => {
   renderResults();
   warmup.render();
   save();
+  alerts.schedule();
 });
 $("profiles").addEventListener("input", e => {
   const f = e.target.dataset.f;
@@ -296,6 +303,7 @@ function route() {
   const page = PAGES[location.hash] || "home";
   ["home", ...Object.values(PAGES)].forEach(id => $(id).hidden = id !== page);
   if (page === "warmupPage") warmup.render();
+  alerts.setScreenOn(page === "warmupPage");
   window.scrollTo(0, 0);
 }
 window.addEventListener("hashchange", () => {
@@ -316,3 +324,4 @@ route();
 renderSettings();
 renderProfiles();
 renderResults();
+alerts.schedule();
