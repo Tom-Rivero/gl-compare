@@ -2,6 +2,7 @@ import { INCREMENTS, DEFAULT_INCREMENT, toKg, fromKg, weightClass, result, deadl
 import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
 import { $, num, esc, nf } from "./util.js";
 import { t, setLang, translatePage } from "./i18n.js";
+import { setTheme } from "./theme.js";
 
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
@@ -10,7 +11,7 @@ const FIELDS = ["bw", "st", "lo", "hi"];
 const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage" };
 
 const defaultState = () => ({
-  settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto" },
+  settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto", theme: "auto" },
   profiles: [0, 1, 2].map(color => ({ name: "", bw: "", st: "", lo: "240", hi: "270", color })),
   warmup: defaultWarmup(),
 });
@@ -50,7 +51,7 @@ const comparable = (a, b) => state.settings.mode === "gl" || a.cls.label === b.c
 // --- Rendu ---
 function renderSettings() {
   const s = state.settings;
-  ["sex", "equipment", "unit", "mode", "scenario", "lang"].forEach(id => $(id).value = s[id]);
+  ["sex", "equipment", "unit", "mode", "scenario", "lang", "theme"].forEach(id => $(id).value = s[id]);
   $("step").innerHTML = INCREMENTS[s.unit].map(v => `<option value="${v}">${nf(v)} ${s.unit}</option>`).join("");
   $("step").value = s.step;
 }
@@ -249,6 +250,11 @@ $("step").addEventListener("change", e => {
   renderResults();
   save();
 });
+$("theme").addEventListener("change", e => {
+  state.settings.theme = e.target.value;
+  setTheme(state.settings.theme);
+  save();
+});
 $("lang").addEventListener("change", e => {
   state.settings.lang = e.target.value;
   setLang(state.settings.lang);
@@ -303,6 +309,7 @@ document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e =>
   route();
 }));
 
+setTheme(state.settings.theme);
 setLang(state.settings.lang);
 translatePage();
 route();
