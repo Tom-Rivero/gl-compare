@@ -1,5 +1,6 @@
 import { INCREMENTS, DEFAULT_INCREMENT, toKg, fromKg, weightClass, result, deadlifts, deadliftToBeat, rank } from "./calc.js";
 import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
+import { initReferee } from "./referee-page.js";
 import { $, num, esc, nf } from "./util.js";
 import { t, setLang, translatePage } from "./i18n.js";
 import { setTheme } from "./theme.js";
@@ -9,7 +10,7 @@ const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
 const FIELDS = ["bw", "st", "lo", "hi"];
-const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage" };
+const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage", "#arbitrage": "refereePage" };
 
 const defaultState = () => ({
   settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto", theme: "auto" },
@@ -23,6 +24,7 @@ const warmup = initWarmup(state, () => {
   save();
   alerts.schedule();
 });
+const referee = initReferee();
 
 // --- Formatage ---
 const fmtGl = v => nf(v, 2, 2);
@@ -268,6 +270,7 @@ $("lang").addEventListener("change", e => {
   renderProfiles();
   renderResults();
   warmup.render();
+  referee.render();
   save();
   alerts.schedule();
 });
@@ -296,13 +299,14 @@ $("profiles").addEventListener("click", e => {
 });
 $("add").addEventListener("click", addProfile);
 
-// --- Navigation : chaque écran secondaire a son ancre (#parametres, #echauffement),
+// --- Navigation : chaque écran secondaire a son ancre (#parametres, #echauffement, #arbitrage),
 // le bouton retour du téléphone le referme ---
 let openedFromHome = false;
 function route() {
   const page = PAGES[location.hash] || "home";
   ["home", ...Object.values(PAGES)].forEach(id => $(id).hidden = id !== page);
   if (page === "warmupPage") warmup.render();
+  if (page === "refereePage") referee.render();
   alerts.setScreenOn(page === "warmupPage");
   window.scrollTo(0, 0);
 }

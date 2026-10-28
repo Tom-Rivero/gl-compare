@@ -153,6 +153,23 @@ button { font: inherit; color: inherit; cursor: pointer; }
 #alertsStatus { margin: 8px 0 0; }
 #alertsFix { margin-top: 8px; }
 
+/* Arbitrage : couleurs des cartons, identiques en thème clair et sombre */
+.ref-card { border-left: 6px solid var(--card-c); }
+.ref-red { --card-c: #dc2626; --card-ink: #fff; }
+.ref-blue { --card-c: #2563eb; --card-ink: #fff; }
+.ref-yellow { --card-c: #facc15; --card-ink: #15181d; }
+.ref-card h2 { display: flex; align-items: center; gap: 8px; }
+.swatch {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 28px;
+  border-radius: 4px;
+  background: var(--card-c);
+  color: var(--card-ink);
+  font-size: .85rem;
+}
+.ref-card ul { margin: 8px 0 0; padding-left: 1.2em; }
+.ref-card li { margin: 4px 0; font-size: .9rem; line-height: 1.4; }
+
 /* Classement */
 .ranking-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .ranking-head select { width: auto; margin: 0; padding: 5px 6px; font-size: .85rem; }
