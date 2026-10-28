@@ -10,7 +10,8 @@ const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
 const FIELDS = ["bw", "st", "lo", "hi"];
-const PAGES = { "#parametres": "settingsPage", "#echauffement": "warmupPage", "#arbitrage": "refereePage" };
+const TABS = { "": "home", "#echauffement": "warmupPage", "#arbitrage": "refereePage" };
+const PAGES = { ...TABS, "#parametres": "settingsPage" };
 
 const defaultState = () => ({
   settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto", theme: "auto" },
@@ -299,26 +300,39 @@ $("profiles").addEventListener("click", e => {
 });
 $("add").addEventListener("click", addProfile);
 
-// --- Navigation : chaque écran secondaire a son ancre (#parametres, #echauffement, #arbitrage),
-// le bouton retour du téléphone le referme ---
-let openedFromHome = false;
+// --- Navigation : les onglets du bas (comparateur, #echauffement, #arbitrage) se remplacent dans
+// l'historique ; les paramètres (#parametres) s'ouvrent par-dessus et le bouton retour du téléphone les referme ---
+let openedInApp = false;
+let lastTab = "";
 function route() {
   const page = PAGES[location.hash] || "home";
-  ["home", ...Object.values(PAGES)].forEach(id => $(id).hidden = id !== page);
+  Object.values(PAGES).forEach(id => $(id).hidden = id !== page);
+  if (page !== "settingsPage") lastTab = location.hash in TABS ? location.hash : "";
+  $("tabbar").hidden = page === "settingsPage";
+  $("tabbar").querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.page === page));
   if (page === "warmupPage") warmup.render();
   if (page === "refereePage") referee.render();
   alerts.setScreenOn(page === "warmupPage");
   window.scrollTo(0, 0);
 }
-window.addEventListener("hashchange", () => {
-  openedFromHome = location.hash in PAGES;
+const goTo = hash => {
+  history.replaceState(null, "", hash || location.pathname);
   route();
+};
+window.addEventListener("hashchange", () => {
+  openedInApp = location.hash === "#parametres";
+  route();
+});
+$("tabbar").addEventListener("click", e => {
+  const a = e.target.closest("a");
+  if (!a) return;
+  e.preventDefault();
+  goTo(new URL(a.href).hash);
 });
 document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e => {
   e.preventDefault();
-  if (openedFromHome) return history.back();
-  history.replaceState(null, "", location.pathname);
-  route();
+  if (openedInApp) return history.back();
+  goTo(lastTab);
 }));
 
 setTheme(state.settings.theme);
