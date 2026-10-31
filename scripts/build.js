@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const OUT = ROOT + "www";
 const RAW = ROOT + "android/app/src/main/res/raw";
-const FILES = ["index.html", "css", "js"];
+const FILES = ["index.html", "css", "js", "fonts"];
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT);

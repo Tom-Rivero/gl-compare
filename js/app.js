@@ -34,6 +34,8 @@ const clsLabel = cls => `${cls.label.replace("-", "−")} kg`;
 // Nom affiché quand le champ est vide (suit la langue choisie)
 const defaultName = i => i ? t("competitor", { n: i }) : t("me");
 const colorVars = color => `--c:var(--c${color});--c-soft:var(--c${color}-soft)`;
+// Initiale affichée dans la pastille de l'athlète (numéro du concurrent si le nom est vide)
+const initial = (name, i) => name.trim() ? name.trim()[0].toUpperCase() : i ? String(i) : t("me")[0];
 
 // --- Lecture des profils ---
 // Renvoie null si le profil est incomplet
@@ -69,9 +71,11 @@ function renderProfiles() {
   $("profiles").innerHTML = state.profiles.map((p, i) => `
     <div class="profile" data-i="${i}" style="${colorVars(p.color)}">
       <div class="profile-head">
-        <span class="dot"></span>
-        <input class="name" data-f="name" value="${esc(p.name)}" placeholder="${esc(defaultName(i))}" aria-label="${esc(t("name.aria", { n: i + 1 }))}">
-        <span class="badge" id="cls${i}"></span>
+        <span class="avatar" id="av${i}" aria-hidden="true">${esc(initial(p.name, i))}</span>
+        <div class="who">
+          <input class="name" data-f="name" value="${esc(p.name)}" placeholder="${esc(defaultName(i))}" aria-label="${esc(t("name.aria", { n: i + 1 }))}">
+          <span class="badge" id="cls${i}"></span>
+        </div>
         ${i ? `<button class="remove" type="button" data-remove aria-label="${esc(t("remove.aria", { name: p.name.trim() || defaultName(i) }))}">×</button>` : ""}
       </div>
       <div class="fields">
@@ -84,7 +88,8 @@ function renderProfiles() {
 
 function renderSummary() {
   const text = id => $(id).selectedOptions[0].textContent;
-  $("summaryLine").textContent = [text("sex"), text("equipment"), t("summary.step", { v: text("step") }), text("mode")].join(" · ");
+  $("summaryLine").innerHTML = [text("sex"), text("equipment"), t("summary.step", { v: text("step") }), text("mode")]
+    .map(s => `<span class="chip">${esc(s)}</span>`).join("");
 }
 
 function renderResults() {
@@ -93,6 +98,7 @@ function renderResults() {
   state.profiles.forEach((p, i) => {
     const pp = ps.find(x => x.i === i);
     $("cls" + i).textContent = pp ? clsLabel(pp.cls) : "";
+    $("av" + i).textContent = initial(p.name, i);
   });
   renderHint();
   renderTable(ps);
@@ -170,9 +176,10 @@ function renderRanking(ps) {
         ? [fmtGl(r.gl), t("total", { v: fmtW(r.total) })]
         : [`${fmtW(r.total)} ${s.unit}`, `${fmtGl(r.gl)} GL`];
       return `<li class="${r.i === 0 ? "me" : ""}" style="${colorVars(r.color)}">
-        <span class="place">${r.place}</span><span class="dot"></span>
-        <span class="rname">${esc(r.name)}</span><span class="rval">${main}</span>
-        <small>DL ${fmtW(r.dl)} · ${sub}</small>
+        <span class="place">${String(r.place).padStart(2, "0")}</span>
+        <span class="avatar" aria-hidden="true">${esc(initial(state.profiles[r.i].name, r.i))}</span>
+        <span class="rtext"><span class="rname">${esc(r.name)}</span><small>DL ${fmtW(r.dl)} · ${sub}</small></span>
+        <span class="rval">${main}</span>
       </li>`;
     }).join("")}</ol>`).join("");
 }

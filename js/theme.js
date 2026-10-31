@@ -7,7 +7,7 @@ let pref = "auto";
 function apply() {
   const theme = pref === "auto" ? (systemDark?.matches ? "dark" : "light") : pref;
   document.documentElement.dataset.theme = theme;
-  const color = theme === "dark" ? "#111418" : "#f4f5f7";
+  const color = theme === "dark" ? "#121316" : "#f5f2ed";
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
   // Barre d'état Android assortie au thème (appli Capacitor uniquement ; ignoré si non pris en charge)
   const statusBar = globalThis.Capacitor?.Plugins?.StatusBar;
