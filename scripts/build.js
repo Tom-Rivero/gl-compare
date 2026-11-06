@@ -1,9 +1,12 @@
 // Copie les fichiers de l'appli dans www/, le dossier embarqué par Capacitor dans l'appli Android,
 // et le son des alertes dans les ressources Android (res/raw), d'où les notifications le lisent
-import { cpSync, rmSync, mkdirSync } from "node:fs";
+import { cpSync, rmSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { currentVersion, stampHtml } from "./stamp.js";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
+const HTML = ROOT + "index.html";
+writeFileSync(HTML, stampHtml(readFileSync(HTML, "utf8"), currentVersion()));
 const OUT = ROOT + "www";
 const RAW = ROOT + "android/app/src/main/res/raw";
 const FILES = ["index.html", "css", "js", "fonts"];
