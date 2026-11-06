@@ -90,6 +90,7 @@ h2 { font-size: 1.12rem; line-height: 1.2; margin: 0; }
 strong { font-weight: 600; color: var(--text); }
 
 .top { display: flex; align-items: center; gap: 12px; margin: 2px 0 12px; min-height: 42px; }
+.top .logo { flex: none; height: 38px; width: auto; margin-right: -2px; }
 .icon-btn {
   flex: none;
   display: inline-flex; align-items: center; justify-content: center;

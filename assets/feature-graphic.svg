@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <!-- Image de présentation du Play Store, scripts/icons.js y ajoute le logo à gauche -->
+  <rect width="1024" height="500" fill="#fff"/>
+  <g fill="#111" font-family="Segoe UI, Arial, sans-serif">
+    <text x="460" y="245" font-size="84" font-weight="700">Meet Day</text>
+    <text x="464" y="308" font-size="36" opacity="0.7">Powerlifting comp toolbox</text>
+  </g>
+</svg>
