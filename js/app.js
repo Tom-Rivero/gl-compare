@@ -1,6 +1,8 @@
 import { INCREMENTS, DEFAULT_INCREMENT, toKg, fromKg, weightClass, result, deadlifts, deadliftToBeat, rank } from "./calc.js";
 import { LIFTS, defaultWarmup, initWarmup } from "./warmup-page.js";
 import { initReferee } from "./referee-page.js";
+import { defaultChecklist, mergeChecklist } from "./checklist.js";
+import { initChecklist } from "./checklist-page.js";
 import { $, num, esc, nf } from "./util.js";
 import { t, setLang, translatePage } from "./i18n.js";
 import { setTheme } from "./theme.js";
@@ -10,13 +12,14 @@ const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
 const FIELDS = ["bw", "st", "lo", "hi"];
-const TABS = { "": "home", "#echauffement": "warmupPage", "#arbitrage": "refereePage" };
+const TABS = { "": "home", "#echauffement": "warmupPage", "#arbitrage": "refereePage", "#checklist": "checklistPage" };
 const PAGES = { ...TABS, "#parametres": "settingsPage" };
 
 const defaultState = () => ({
   settings: { sex: "M", equipment: "classic", unit: "kg", step: 2.5, mode: "gl", scenario: "min", lang: "auto", theme: "auto" },
   profiles: [0, 1, 2].map(color => ({ name: "", bw: "", st: "", lo: "240", hi: "270", color })),
   warmup: defaultWarmup(),
+  checklist: defaultChecklist(),
 });
 
 let state = load();
@@ -26,6 +29,7 @@ const warmup = initWarmup(state, () => {
   alerts.schedule();
 });
 const referee = initReferee();
+const checklist = initChecklist(state, save);
 
 // --- Formatage ---
 const fmtGl = v => nf(v, 2, 2);
@@ -236,7 +240,7 @@ function load() {
       warmup.lifts = { ...base.warmup.lifts, ...saved.warmup?.lifts };
       // Les anciens noms par défaut (« Moi », « Concurrent n ») laissent place au nom traduit
       const profiles = saved.profiles.map((p, i) => p.name === (i ? `Concurrent ${i}` : "Moi") ? { ...p, name: "" } : p);
-      return { settings, profiles, warmup };
+      return { settings, profiles, warmup, checklist: mergeChecklist(saved.checklist) };
     }
     // Reprise des données de la version précédente (3 profils A, B, C)
     const old = JSON.parse(localStorage.getItem(OLD_STORE_KEY));
@@ -279,6 +283,7 @@ $("lang").addEventListener("change", e => {
   renderResults();
   warmup.render();
   referee.render();
+  checklist.render();
   save();
   alerts.schedule();
 });
@@ -307,7 +312,7 @@ $("profiles").addEventListener("click", e => {
 });
 $("add").addEventListener("click", addProfile);
 
-// --- Navigation : les onglets du bas (comparateur, #echauffement, #arbitrage) se remplacent dans
+// --- Navigation : les onglets du bas (comparateur, #echauffement, #arbitrage, #checklist) se remplacent dans
 // l'historique ; les paramètres (#parametres) s'ouvrent par-dessus et le bouton retour du téléphone les referme ---
 let openedInApp = false;
 let lastTab = "";
@@ -319,6 +324,7 @@ function route() {
   $("tabbar").querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.page === page));
   if (page === "warmupPage") warmup.render();
   if (page === "refereePage") referee.render();
+  if (page === "checklistPage") checklist.render();
   alerts.setScreenOn(page === "warmupPage");
   window.scrollTo(0, 0);
 }
