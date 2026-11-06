@@ -6,7 +6,7 @@ const LOCALES = { fr: "fr-FR", en: "en-US", es: "es-ES" };
 
 const DICT = {
   fr: {
-    "app.title": "Comparateur GL",
+    "app.title": "Meet Day",
     "home.title": "Comparateur GL",
     "nav.warmup": "Échauffement",
     "nav.settings": "Paramètres",
@@ -77,7 +77,7 @@ const DICT = {
     "al.toggle": "Alerte 1 min avant chaque série",
     "al.off": "Alertes désactivées.",
     "al.none": "Aucune alerte à venir dans les 18 prochaines heures : renseigne l'heure de passage et les repos.",
-    "al.denied": "Les notifications sont bloquées : autorise-les pour GL Compare dans les réglages du téléphone.",
+    "al.denied": "Les notifications sont bloquées : autorise-les pour Meet Day dans les réglages du téléphone.",
     "al.count": "{n} alertes programmées, prochaine à {t}.",
     "al.exact": "Pour qu'elles tombent à la minute près, autorise les alarmes exactes.",
     "al.exactBtn": "Autoriser les alarmes exactes",
@@ -153,7 +153,7 @@ const DICT = {
     "cl.hint": "Coche ce qui est dans ton sac : ce qui manque reste en évidence. L'interrupteur à droite retire de la liste ce dont tu n'as pas besoin (il passe en bas, grisé).",
   },
   en: {
-    "app.title": "GL Compare",
+    "app.title": "Meet Day",
     "home.title": "GL Compare",
     "nav.warmup": "Warm-up",
     "nav.settings": "Settings",
@@ -224,7 +224,7 @@ const DICT = {
     "al.toggle": "Alert 1 min before each set",
     "al.off": "Alerts are off.",
     "al.none": "No alerts in the next 18 hours: enter your attempt time and rests.",
-    "al.denied": "Notifications are blocked: allow them for GL Compare in your phone settings.",
+    "al.denied": "Notifications are blocked: allow them for Meet Day in your phone settings.",
     "al.count": "{n} alerts scheduled, next at {t}.",
     "al.exact": "To fire on the exact minute, allow exact alarms.",
     "al.exactBtn": "Allow exact alarms",
@@ -300,7 +300,7 @@ const DICT = {
     "cl.hint": "Check what's in your bag: what's missing stays front and center. The switch on the right takes out what you don't need (it moves to the bottom, greyed out).",
   },
   es: {
-    "app.title": "Comparador GL",
+    "app.title": "Meet Day",
     "home.title": "Comparador GL",
     "nav.warmup": "Calentamiento",
     "nav.settings": "Ajustes",
@@ -371,7 +371,7 @@ const DICT = {
     "al.toggle": "Aviso 1 min antes de cada serie",
     "al.off": "Avisos desactivados.",
     "al.none": "No hay avisos en las próximas 18 horas: introduce la hora de tu intento y los descansos.",
-    "al.denied": "Las notificaciones están bloqueadas: permítelas para GL Compare en los ajustes del teléfono.",
+    "al.denied": "Las notificaciones están bloqueadas: permítelas para Meet Day en los ajustes del teléfono.",
     "al.count": "{n} avisos programados, el próximo a las {t}.",
     "al.exact": "Para que suenen al minuto exacto, permite las alarmas exactas.",
     "al.exactBtn": "Permitir alarmas exactas",
