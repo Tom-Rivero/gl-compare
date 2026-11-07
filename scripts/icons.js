@@ -60,9 +60,11 @@ await sharp(svg("feature-graphic"), { density: 72 })
   .flatten().png().toFile(ASSETS + "store/feature-graphic.png");
 console.log("PNG prêts dans assets/ et assets/store/");
 
-// Logo affiché dans l'en-tête des pages de l'appli (et favicon)
+// Logo affiché dans l'en-tête des pages de l'appli
 mkdirSync(ROOT + "img", { recursive: true });
 await sharp(logo).resize({ height: 128 }).png({ palette: true }).toFile(ROOT + "img/logo.png");
+// Favicon (onglet du navigateur) : carré, sinon le navigateur étire le logo, plus haut que large
+await sharp(logo).resize(64, 64, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toFile(ROOT + "img/favicon.png");
 console.log("Logo de l'appli prêt dans img/");
 
 // Icônes de l'appli web ajoutée à l'écran d'accueil (manifest.webmanifest et apple-touch-icon d'index.html).
