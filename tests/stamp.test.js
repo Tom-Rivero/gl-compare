@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { currentVersion, stampHtml } from "../scripts/stamp.js";
 
 test("index.html porte la version à jour du CSS et du JS (sinon : npm run stamp)", () => {
-  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  // Fins de ligne normalisées : sous Windows, Git écrit index.html en CRLF, alors que stampHtml génère des LF
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8").replace(/\r\n/g, "\n");
   assert.equal(html, stampHtml(html, currentVersion()), "lance npm run stamp avant de mettre en ligne");
 });
 
