@@ -65,6 +65,30 @@ mkdirSync(ROOT + "img", { recursive: true });
 await sharp(logo).resize({ height: 128 }).png({ palette: true }).toFile(ROOT + "img/logo.png");
 console.log("Logo de l'appli prêt dans img/");
 
+// Icônes de l'appli web ajoutée à l'écran d'accueil (manifest.webmanifest et apple-touch-icon d'index.html).
+// - iOS (apple-touch-icon) : fond blanc plein cadre, partie visible de l'icône adaptative comme pour le Store
+// - « maskable » (icône de l'écran d'accueil Android, que le téléphone découpe en cercle) : logo sur le fond
+//   beige de l'appli. Chrome la reprend aussi au centre de l'écran de lancement : sur la même couleur
+//   (background_color du manifest), son fond ne se voit pas. Chrome en fait une icône adaptative Android : logo
+//   à la même taille que sur l'icône de l'appli native (cercle de 31 dp sur 108)
+// - « any » : logo seul sur fond transparent, pour les navigateurs qui ne découpent pas les icônes
+const APP_BG = "#f5f2ed"; // = --bg de css/style.css et background_color de manifest.webmanifest
+const visible = () => sharp(ASSETS + "icon-only.png").extract({ left: 171, top: 171, width: 682, height: 682 });
+await visible().resize(180, 180).flatten({ background: "#fff" }).png().toFile(ROOT + "img/apple-touch-icon.png");
+{
+  const size = 512, scale = size * 31 / 108 / logoRadius;
+  const input = await sharp(logo).resize(Math.round(info.width * scale), Math.round(info.height * scale)).toBuffer();
+  await sharp({ create: { width: size, height: size, channels: 4, background: APP_BG } })
+    .composite([{ input }]).flatten({ background: APP_BG }).png().toFile(ROOT + "img/icon-maskable-512.png");
+}
+for (const size of [192, 512]) {
+  const inner = Math.round(size * .86);
+  const input = await sharp(logo).resize(inner, inner, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).toBuffer();
+  await sharp({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input }]).png().toFile(ROOT + `img/icon-${size}.png`);
+}
+console.log("Icônes de l'appli web prêtes dans img/");
+
 const { status } = spawnSync("npx capacitor-assets generate --android", { cwd: ROOT, stdio: "inherit", shell: true });
 if (status !== 0) process.exit(status ?? 1);
 

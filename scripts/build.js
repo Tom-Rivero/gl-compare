@@ -9,7 +9,7 @@ const HTML = ROOT + "index.html";
 writeFileSync(HTML, stampHtml(readFileSync(HTML, "utf8"), currentVersion()));
 const OUT = ROOT + "www";
 const RAW = ROOT + "android/app/src/main/res/raw";
-const FILES = ["index.html", "css", "js", "fonts", "img"];
+const FILES = ["index.html", "manifest.webmanifest", "css", "js", "fonts", "img"];
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT);

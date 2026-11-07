@@ -7,6 +7,7 @@ import { $, num, esc, nf } from "./util.js";
 import { t, setLang, translatePage } from "./i18n.js";
 import { setTheme } from "./theme.js";
 import { initAlerts } from "./alerts-native.js";
+import { initInstall } from "./install.js";
 
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
@@ -284,6 +285,7 @@ $("lang").addEventListener("change", e => {
   warmup.render();
   referee.render();
   checklist.render();
+  install.render();
   save();
   alerts.schedule();
 });
@@ -356,3 +358,4 @@ renderSettings();
 renderProfiles();
 renderResults();
 alerts.schedule();
+const install = initInstall();
