@@ -1,6 +1,8 @@
 # Fiche Play Store
 
-Textes à coller dans la Play Console (Croissance → Présence sur le Store → Fiche principale, puis « Gérer les traductions » pour l'anglais et l'espagnol).
+Textes à coller dans la Play Console (Croissance → Présence sur le Store → Fiche principale, puis « Gérer les traductions » pour le français et l'espagnol).
+
+**Langue par défaut : anglais (en-US).** C'est la fiche affichée dans tous les pays dont la langue n'a pas de traduction (allemand, italien…) ; à choisir à la création de l'appli, ou ensuite dans Fiche principale → Gérer les traductions → Modifier la langue par défaut. Le français (fr-FR) et l'espagnol (es-ES) sont des traductions complètes, textes et captures.
 Limites : titre 30 caractères, description courte 80, description complète 4000.
 
 Politique de confidentialité : `https://tom-rivero.github.io/gl-compare/docs/privacy.html` (GitHub Pages publie la racine de `main`).
@@ -112,4 +114,4 @@ Meet Day es una aplicación independiente, no afiliada a la IPF.
 - Icône 512 × 512 : `assets/store/icon-512.png`.
 - Image de présentation 1024 × 500 : `assets/store/feature-graphic.png`.
 - Ces deux fichiers, les icônes Android et le logo de l'appli se régénèrent avec `npm run icons` depuis `assets/logo.webp` (et `assets/logo-sans-texte.png` pour l'image de présentation).
-- Au moins 2 captures d'écran de téléphone (idéalement 4 à 8 : comparateur avec classement, tableau, échauffement, cartons, thème sombre).
+- Captures d'écran de téléphone (1080 × 1920) : `assets/store/screenshots/en/` pour la fiche principale, `fr/` et `es/` pour les traductions (7 par langue, 8 au maximum par fiche). L'image de présentation n'a pas de texte : la même sert pour les trois langues.
