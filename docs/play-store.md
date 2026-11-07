@@ -32,6 +32,10 @@ COMPARATEUR DE POINTS GL
 CARTONS DES ARBITRES
 • La raison de chaque carton rouge, bleu ou jaune, mouvement par mouvement, d'après le règlement technique IPF.
 
+CHECKLIST DU SAC
+• Une liste toute prête pour ton sac de compétition : pièce d’identité, singlet, chaussures de squat, ceinture, genouillères, bandes de poignets, magnésie, repas après la pesée, snacks…
+• Coche au fur et à mesure, désactive ce qui ne te sert pas et ajoute tes propres éléments.
+
 Sans compte, sans publicité, sans connexion : tes données restent sur ton téléphone.
 Disponible en français, anglais et espagnol, en thème clair ou sombre.
 
@@ -62,6 +66,10 @@ WARM-UP
 REFEREE CARDS
 • The reason behind every red, blue and yellow card, lift by lift, based on the IPF Technical Rules.
 
+MEET BAG CHECKLIST
+• A ready-made list for your meet bag: ID card, singlet, squat shoes, belt, knee sleeves, wrist wraps, chalk, post weigh-in meal, snacks and more.
+• Tick items off as you pack, switch off the ones you don’t need and add your own.
+
 No account, no ads, no connection needed: your data stays on your phone.
 Available in English, French and Spanish, in light or dark theme.
 
@@ -91,6 +99,10 @@ CALENTAMIENTO
 
 TARJETAS DE LOS JUECES
 • El motivo de cada tarjeta roja, azul o amarilla, movimiento por movimiento, según el reglamento técnico de la IPF.
+
+CHECKLIST DE LA BOLSA
+• Una lista ya preparada para tu bolsa de competición: documento de identidad, singlet, zapatillas de sentadilla, cinturón, rodilleras, muñequeras, magnesio, comida después del pesaje, snacks…
+• Márcalos a medida que preparas la bolsa, desactiva lo que no necesites y añade tus propios elementos.
 
 Sin cuenta, sin anuncios, sin conexión: tus datos se quedan en tu teléfono.
 Disponible en español, francés e inglés, en tema claro u oscuro.
