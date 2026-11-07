@@ -3,7 +3,7 @@
 Textes à coller dans la Play Console (Croissance → Présence sur le Store → Fiche principale, puis « Gérer les traductions » pour l'anglais et l'espagnol).
 Limites : titre 30 caractères, description courte 80, description complète 4000.
 
-Politique de confidentialité : `https://tom-rivero.github.io/gl-compare/privacy.html` (une fois GitHub Pages activé sur le dossier `docs/` de `main`).
+Politique de confidentialité : `https://tom-rivero.github.io/gl-compare/docs/privacy.html` (GitHub Pages publie la racine de `main`).
 
 ## Français (fr-FR)
 
@@ -111,5 +111,5 @@ Meet Day es una aplicación independiente, no afiliada a la IPF.
 
 - Icône 512 × 512 : `assets/store/icon-512.png`.
 - Image de présentation 1024 × 500 : `assets/store/feature-graphic.png`.
-- Ces deux fichiers, et les icônes Android, se régénèrent avec `npm run icons` depuis les SVG de `assets/`.
+- Ces deux fichiers, les icônes Android et le logo de l'appli se régénèrent avec `npm run icons` depuis `assets/logo.webp` (et `assets/logo-sans-texte.png` pour l'image de présentation).
 - Au moins 2 captures d'écran de téléphone (idéalement 4 à 8 : comparateur avec classement, tableau, échauffement, cartons, thème sombre).
