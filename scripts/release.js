@@ -20,6 +20,6 @@ if (!env.JAVA_HOME && existsSync(STUDIO_JBR)) env.JAVA_HOME = STUDIO_JBR;
 if (!env.ANDROID_HOME && !existsSync(ANDROID + "/local.properties") && existsSync(DEFAULT_SDK)) env.ANDROID_HOME = DEFAULT_SDK;
 
 const windows = process.platform === "win32";
-const { status } = spawnSync(windows ? "gradlew.bat bundleRelease" : "./gradlew bundleRelease", { cwd: ANDROID, env, stdio: "inherit", shell: true });
+const { status } = spawnSync(windows ? ".\\gradlew.bat bundleRelease" : "./gradlew bundleRelease", { cwd: ANDROID, env, stdio: "inherit", shell: true });
 if (status !== 0) process.exit(status ?? 1);
 console.log(`AAB signé prêt : ${AAB}`);
