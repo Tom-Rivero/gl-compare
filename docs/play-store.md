@@ -103,7 +103,7 @@ Meet Day es una aplicación independiente, no afiliada a la IPF.
 - **Annonces** : non, l'application ne contient pas d'annonces.
 - **Accès à l'application** : toutes les fonctionnalités sont disponibles sans restriction (pas de connexion).
 - **Classification du contenu** : catégorie « Utilitaire, productivité, communication ou autre » ; réponds non à tout (pas de violence, d'achats, d'échanges entre utilisateurs, etc.).
-- **Public cible** : 18 ans et plus (ou 13+ ; éviter les moins de 13 ans, qui imposent les règles « Familles »).
+- **Public cible** : cocher 13-15, 16-17 et 18 ans et plus (tous les âges à partir de 13 ans). Ce n'est pas une restriction de téléchargement ; ne pas cocher de tranche de moins de 13 ans, qui imposerait le règlement « Familles ».
 - **Sécurité des données** : « Votre application collecte-t-elle ou partage-t-elle des données utilisateur ? » → **Non**. Les données restent sur l'appareil, ce qui ne compte pas comme une collecte.
 - **Application d'actualités / santé / gouvernementale / financière** : non à tout. (Santé : non, c'est un calculateur de sport sans données de santé.)
 - **Autorisation alarmes exactes** (`SCHEDULE_EXACT_ALARM`), si la Console la demande : usage « Minuteur / réveil choisi par l'utilisateur ». Texte : « L'utilisateur programme des alertes d'échauffement à une heure précise avant son passage en compétition ; une alerte en retard lui ferait rater sa série. »
