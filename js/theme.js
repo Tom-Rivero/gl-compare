@@ -9,10 +9,12 @@ function apply() {
   document.documentElement.dataset.theme = theme;
   const color = theme === "dark" ? "#121316" : "#f5f2ed";
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
-  // Barre d'état Android assortie au thème (appli Capacitor uniquement ; ignoré si non pris en charge)
-  const statusBar = globalThis.Capacitor?.Plugins?.StatusBar;
-  statusBar?.setStyle({ style: theme === "dark" ? "DARK" : "LIGHT" }).catch(() => {});
-  statusBar?.setBackgroundColor({ color }).catch(() => {});
+  // Barres système Android assorties au thème (appli Capacitor uniquement ; ignoré si non pris en charge).
+  // Depuis Android 15, la couleur des barres ne se règle plus : on colore le fond de la fenêtre, visible
+  // derrière elles, et on choisit des icônes claires (DARK) ou foncées (LIGHT) pour les deux barres.
+  const plugins = globalThis.Capacitor?.Plugins;
+  plugins?.SystemBars?.setStyle({ style: theme === "dark" ? "DARK" : "LIGHT" }).catch(() => {});
+  plugins?.WindowBackground?.setColor({ color }).catch(() => {});
 }
 
 // p = "auto", "light" ou "dark"

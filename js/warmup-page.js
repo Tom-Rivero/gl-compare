@@ -118,6 +118,8 @@ export function initWarmup(state, save) {
     $("wuSets").lastElementChild.querySelector('[data-f="load"]').focus();
   });
   setInterval(() => { if (!$("warmupPage").hidden) updateTimes(); }, REFRESH_MS);
+  // Au retour sur l’appli (écran rallumé), les minuteries ont pu être suspendues : on rafraîchit tout de suite
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("warmupPage").hidden) updateTimes(); });
 
   return { render };
 }

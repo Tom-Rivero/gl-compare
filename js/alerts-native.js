@@ -64,7 +64,7 @@ export function initAlerts(state, save) {
     const exact = (await LN.checkExactNotificationSetting()).exact_alarm === "granted";
     await LN.schedule({ notifications: plan.map(a => notification(a, exact)) });
     const next = plan[0].at;
-    const count = t("al.count", { n: plan.length, t: formatTime(next.getHours() * 3600 + next.getMinutes() * 60) });
+    const count = t(plan.length === 1 ? "al.count1" : "al.count", { n: plan.length, t: formatTime(next.getHours() * 3600 + next.getMinutes() * 60) });
     status(exact ? count : `${count} ${t("al.exact")}`, exact ? null : t("al.exactBtn"));
   }
 
