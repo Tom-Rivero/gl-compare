@@ -344,11 +344,21 @@ $("tabbar").addEventListener("click", e => {
   e.preventDefault();
   goTo(new URL(a.href).hash);
 });
-document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e => {
-  e.preventDefault();
+const closeSettings = () => {
   if (openedInApp) return history.back();
   goTo(lastTab);
+};
+document.querySelectorAll(".back").forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  closeSettings();
 }));
+// Geste / bouton retour de l'appli Android : appelé par MainActivity. Renvoie true si l'appli l'a géré
+// (fermeture des paramètres, comme la flèche retour), false pour laisser Android quitter l'appli.
+window.onAndroidBack = () => {
+  if ($("settingsPage").hidden) return false;
+  closeSettings();
+  return true;
+};
 
 setTheme(state.settings.theme);
 setLang(state.settings.lang);
