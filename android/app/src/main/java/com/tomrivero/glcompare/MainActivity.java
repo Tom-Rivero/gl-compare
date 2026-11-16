@@ -12,6 +12,14 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(WindowBackgroundPlugin.class);
         super.onCreate(savedInstanceState);
 
+        // Pas de zoom dans la WebView (pincement, double tap), en plus du viewport de index.html
+        if (bridge != null && bridge.getWebView() != null) {
+            android.webkit.WebSettings settings = bridge.getWebView().getSettings();
+            settings.setSupportZoom(false);
+            settings.setBuiltInZoomControls(false);
+            settings.setDisplayZoomControls(false);
+        }
+
         // Geste / bouton retour : on demande d'abord à la page (window.onAndroidBack, js/app.js) de le
         // gérer, par exemple pour fermer les paramètres comme sur la webapp ; sinon Android quitte l'appli.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

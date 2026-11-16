@@ -68,7 +68,8 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+/* Pas de zoom : ni pincement (pan-x pan-y), ni double tap (manipulation implicite) */
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; touch-action: pan-x pan-y; }
 body {
   margin: 0;
   min-height: 100vh;
@@ -210,7 +211,8 @@ main > .hint { padding: 0 4px; }
   left: 50%; transform: translateX(-50%);
   bottom: calc(10px + env(safe-area-inset-bottom));
   width: min(calc(100% - 32px), 440px);
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  /* minmax(0, …) : avec le texte grossi du téléphone, un libellé trop long ne pousse pas les autres hors de l'écran */
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;
   padding: 5px;
   border-radius: 999px;
@@ -226,11 +228,13 @@ main > .hint { padding: 0 4px; }
   padding: 4px;
   border-radius: 999px;
   color: var(--muted);
-  font-size: .7rem; font-weight: 500;
+  /* --tab-scale : réduit par fitTabbar (js/app.js) si un libellé ne tient pas dans sa bulle */
+  font-size: calc(.7rem * var(--tab-scale, 1)); font-weight: 500;
   text-decoration: none;
   transition: background-color .2s, color .2s;
 }
-.tabbar a svg { width: 22px; height: 22px; stroke-width: 1.7; }
+.tabbar a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tabbar a svg { flex: none; width: 22px; height: 22px; stroke-width: 1.7; }
 .tabbar a[aria-current] { color: var(--on-accent); background: var(--accent); }
 .tabbar a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 

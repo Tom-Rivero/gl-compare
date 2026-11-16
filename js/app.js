@@ -9,6 +9,11 @@ import { setTheme } from "./theme.js";
 import { initAlerts } from "./alerts-native.js";
 import { initInstall } from "./install.js";
 
+// Pas de zoom : Safari iOS ignore user-scalable=no et touch-action pour le pincement,
+// on bloque donc ses gestes, et Ctrl + molette / pavé tactile sur ordinateur
+document.addEventListener("gesturestart", e => e.preventDefault());
+document.addEventListener("wheel", e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+
 const STORE_KEY = "gl-compare-v3";
 const OLD_STORE_KEY = "gl-compare-v2";
 const COLORS = 8;
@@ -324,12 +329,25 @@ function route() {
   if (page !== "settingsPage") lastTab = location.hash in TABS ? location.hash : "";
   $("tabbar").hidden = page === "settingsPage";
   $("tabbar").querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.page === page));
+  fitTabbar();
   if (page === "warmupPage") warmup.render();
   if (page === "refereePage") referee.render();
   if (page === "checklistPage") checklist.render();
   alerts.setScreenOn(page === "warmupPage");
   window.scrollTo(0, 0);
 }
+// Texte grossi dans les réglages du téléphone (ou langue aux libellés longs) : on réduit les libellés de la
+// barre d'onglets jusqu'à ce que chacun tienne dans sa bulle ; en dessous de 60 %, ils finissent par « … »
+function fitTabbar() {
+  const bar = $("tabbar");
+  if (bar.hidden) return;
+  const spans = [...bar.querySelectorAll("span")];
+  const overflows = () => spans.some(s => s.scrollWidth > s.clientWidth + 0.5);
+  bar.style.removeProperty("--tab-scale");
+  for (let scale = 0.95; scale >= 0.6 && overflows(); scale -= 0.05) bar.style.setProperty("--tab-scale", scale.toFixed(2));
+}
+window.addEventListener("resize", fitTabbar);
+document.fonts?.ready.then(fitTabbar);
 const goTo = hash => {
   history.replaceState(null, "", hash || location.pathname);
   route();
